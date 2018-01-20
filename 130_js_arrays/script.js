@@ -1,7 +1,7 @@
 var testarr = [1,2,3,4];
-function printReverse(){}
-	for(i=testarr.length; i>=0; i--){
-		console.log(testarr[i]);
+function printReverse(arr){
+	for(i=arr.length; i>=0; i--){
+		console.log(arr[i]);
 	}
 }
 
