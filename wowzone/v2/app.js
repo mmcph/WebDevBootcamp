@@ -7,14 +7,16 @@ mongoose.connect("mongodb://localhost/wowzone");
 
 var screenshotSchema = new mongoose.Schema({
     name: String,
-    image: String
+    image: String,
+    descr: String
 });
 
 var Screenshot = mongoose.model("Screenshot", screenshotSchema);
 
 // Screenshot.create({
-//     name: "Westfall",
-//     image: "http://1.bp.blogspot.com/_ZnN8mGFKQxQ/TFm1xzO6BFI/AAAAAAAAAc4/VTNcnyvn7gA/s1600/intro.jpg"
+//     name: "Elwynn Forest",
+//     image: "https://i.ytimg.com/vi/uvW-QTiZLQ0/maxresdefault.jpg",
+//     descr: "God rays!"
 // }, function(err, screenshot){
 //     if(err){
 //         console.log(err);
@@ -43,7 +45,7 @@ app.get("/screenshots", function(req, res){
         if(err){
             console.log(err);
         } else {
-            res.render("screenshots", {screenshots:allScreenshots});
+            res.render("index", {screenshots:allScreenshots});
         }
     });
 });
@@ -55,12 +57,23 @@ app.get("/screenshots/new", function(req, res){
 app.post("/screenshots", function(req, res){
     var name = req.body.name;
     var image = req.body.image;
-    var newScreen = {name: name, image: image};
+    var descr = req.body.descr;
+    var newScreen = {name: name, image: image, descr: descr};
     Screenshot.create(newScreen, function(err, newSS){
         if(err){
             console.log(err);
         } else {
             res.redirect("/screenshots");
+        }
+    });
+});
+
+app.get("/screenshots/:id", function(req, res){
+    Screenshot.findById(req.params.id, function(err, specSS){
+        if(err){
+            console.log(err);
+        } else {
+            res.render("show", {screenshot:specSS});
         }
     });
 });
