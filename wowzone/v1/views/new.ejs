@@ -1,0 +1,13 @@
+<% include partials/header %>
+
+<h1>Create a new screenshot</h1>
+
+<form action="/screenshots" method="POST">
+    <input type="text" name="name" placeholder="Zone">
+    <input type="text" name="image" placeholder="Image URL">
+    <button>Submit</button>
+</form>
+
+<a href="/screenshots">Go Back</a>
+
+<% include partials/footer %>
