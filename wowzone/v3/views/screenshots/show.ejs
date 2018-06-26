@@ -1,11 +1,16 @@
-<% include partials/header %>
+<% include ../partials/header %>
 
 <h1><%=screenshot.name%></h1>
 
 <img src="<%=screenshot.image%>" style="max-width:90vw;">
 
 <p><%=screenshot.descr%></p>
+
+<p>
+    <a class="btn btn-success" href="/screenshots/<%=screenshot._id%>/comments/new">Add a New Comment</a>
+</p>
+
 <% screenshot.comments.forEach(function(comment){ %>
     <p><strong><%=comment.author%></strong> - <%=comment.text%></p>
 <% }) %>
-<% include partials/footer %>
+<% include ../partials/footer %>

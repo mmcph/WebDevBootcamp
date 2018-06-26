@@ -3,24 +3,11 @@ var app = express();
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 var Screenshot = require("./models/screenshot");
+var Comment = require("./models/comment");
 var seedDB = require("./seeds.js");
 
 mongoose.connect("mongodb://localhost/wowzone");
 seedDB();
-
-
-// Screenshot.create({
-//     name: "Elwynn Forest",
-//     image: "https://i.ytimg.com/vi/uvW-QTiZLQ0/maxresdefault.jpg",
-//     descr: "God rays!"
-// }, function(err, screenshot){
-//     if(err){
-//         console.log(err);
-//     } else {
-//         console.log("NEWLY CREATED SCREENSHOT: ");
-//         console.log(screenshot);
-//     }
-// });
 
 //   var screenshots = [
 //         {name: "Elwynn Forest", image: "https://i.ytimg.com/vi/uvW-QTiZLQ0/maxresdefault.jpg"},
@@ -41,13 +28,13 @@ app.get("/screenshots", function(req, res){
         if(err){
             console.log(err);
         } else {
-            res.render("index", {screenshots:allScreenshots});
+            res.render("screenshots/index", {screenshots:allScreenshots});
         }
     });
 });
 
 app.get("/screenshots/new", function(req, res){
-   res.render("new"); 
+   res.render("screenshots/new"); 
 });
 
 app.post("/screenshots", function(req, res){
@@ -70,7 +57,38 @@ app.get("/screenshots/:id", function(req, res){
             console.log(err);
         } else {
             console.log(specSS);
-            res.render("show", {screenshot:specSS});
+            res.render("screenshots/show", {screenshot:specSS});
+        }
+    });
+});
+
+//=======COMMENTS========
+
+app.get("/screenshots/:id/comments/new", function(req, res){
+    Screenshot.findById(req.params.id, function(err, screenshot){
+        if(err){
+            console.log(err);
+        } else {
+            res.render("comments/new", {screenshot: screenshot});
+        }
+    });
+});
+
+app.post("/screenshots/:id", function(req, res){
+    Screenshot.findById(req.params.id, function(err, screenshot){
+        if(err){
+            console.log(err);
+            res.redirect("/screenshots");
+        } else {
+            Comment.create(req.body.comment, function(err, comment){
+                if(err){
+                    console.log(err);
+                } else {
+                    screenshot.comments.push(comment);
+                    screenshot.save();
+                    res.redirect("/screenshots/" + screenshot._id);
+                }
+            });
         }
     });
 });
