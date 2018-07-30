@@ -25,6 +25,11 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+app.use(function(req, res, next){
+   res.locals.currentUser = req.user;
+   next();
+});
+
 //   var screenshots = [
 //         {name: "Elwynn Forest", image: "https://i.ytimg.com/vi/uvW-QTiZLQ0/maxresdefault.jpg"},
 //         {name: "Westfall", image: "http://1.bp.blogspot.com/_ZnN8mGFKQxQ/TFm1xzO6BFI/AAAAAAAAAc4/VTNcnyvn7gA/s1600/intro.jpg"},
@@ -44,7 +49,7 @@ app.get("/screenshots", function(req, res){
         if(err){
             console.log(err);
         } else {
-            res.render("screenshots/index", {screenshots:allScreenshots});
+            res.render("screenshots/index", {screenshots:allScreenshots, currentUser: req.user});
         }
     });
 });
@@ -80,7 +85,7 @@ app.get("/screenshots/:id", function(req, res){
 
 //=======COMMENTS========
 
-app.get("/screenshots/:id/comments/new", function(req, res){
+app.get("/screenshots/:id/comments/new", isLoggedIn, function(req, res){
     Screenshot.findById(req.params.id, function(err, screenshot){
         if(err){
             console.log(err);
@@ -90,7 +95,7 @@ app.get("/screenshots/:id/comments/new", function(req, res){
     });
 });
 
-app.post("/screenshots/:id", function(req, res){
+app.post("/screenshots/:id", isLoggedIn, function(req, res){
     Screenshot.findById(req.params.id, function(err, screenshot){
         if(err){
             console.log(err);
@@ -129,6 +134,37 @@ app.post("/register", function(req, res){
         });
     });
 })
+
+//login routes
+
+app.get("/login", function(req, res){
+    res.render("login");
+});
+
+//login logic
+
+app.post("/login", passport.authenticate("local", 
+    {
+        successRedirect: "/screenshots",
+        failureRedirect: "/login"
+    }), function(req, res){
+});
+
+//logout route
+
+app.get("/logout", function(req, res){
+    req.logout();
+    res.redirect("/screenshots");
+});
+
+//middleware
+
+function isLoggedIn(req, res, next){
+    if(req.isAuthenticated()){
+        return next();
+    }
+    res.redirect("/login");
+}
 
 app.listen(process.env.PORT, process.env.IP, function(){
     console.log("WoWZone server started.");
