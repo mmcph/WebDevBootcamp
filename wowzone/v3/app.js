@@ -1,13 +1,29 @@
 var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
+var passport = require("passport");
+var LocalStrategy = require("passport-local");
 var mongoose = require("mongoose");
 var Screenshot = require("./models/screenshot");
 var Comment = require("./models/comment");
+var User = require("./models/user");
 var seedDB = require("./seeds.js");
 
 mongoose.connect("mongodb://localhost/wowzone");
 seedDB();
+
+// PASSPORT CONFIG
+app.use(require("express-session")({
+    secret: "You wouldn't guess this in a million years, chump.",
+    resave: false,
+    saveUninitialized: false
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 //   var screenshots = [
 //         {name: "Elwynn Forest", image: "https://i.ytimg.com/vi/uvW-QTiZLQ0/maxresdefault.jpg"},
@@ -92,6 +108,27 @@ app.post("/screenshots/:id", function(req, res){
         }
     });
 });
+
+//Auth Routes
+//register
+
+app.get("/register", function(req, res){
+    res.render("register");
+});
+//register logic
+
+app.post("/register", function(req, res){
+    var newUser = new User({username: req.body.username});
+    User.register(newUser, req.body.password, function(err, user){
+        if(err) {
+            console.log(err);
+            return res.render("register");
+        }
+        passport.authenticate("local")(req, res, function(){
+            res.redirect("/screenshots");
+        });
+    });
+})
 
 app.listen(process.env.PORT, process.env.IP, function(){
     console.log("WoWZone server started.");
