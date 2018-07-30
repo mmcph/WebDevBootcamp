@@ -2,7 +2,7 @@ var express = require("express");
 var router = express.Router();
 var Screenshot = require("../models/screenshot");
 
-router.get("/screenshots", function(req, res){
+router.get("/", function(req, res){
     Screenshot.find({}, function(err, allScreenshots){
         if(err){
             console.log(err);
@@ -12,11 +12,11 @@ router.get("/screenshots", function(req, res){
     });
 });
 
-router.get("/screenshots/new", function(req, res){
+router.get("/new", function(req, res){
    res.render("screenshots/new"); 
 });
 
-router.post("/screenshots", function(req, res){
+router.post("/", function(req, res){
     var name = req.body.name;
     var image = req.body.image;
     var descr = req.body.descr;
@@ -30,7 +30,7 @@ router.post("/screenshots", function(req, res){
     });
 });
 
-router.get("/screenshots/:id", function(req, res){
+router.get("/:id", function(req, res){
     Screenshot.findById(req.params.id).populate("comments").exec(function(err, specSS){
         if(err){
             console.log(err);

@@ -9,9 +9,9 @@ var Comment = require("./models/comment");
 var User = require("./models/user");
 var seedDB = require("./seeds.js");
 
-var commentRoutes = require("./routes.comments");
-var screenshotRoutes = require("./routes.screenshots");
-var indexRoutes = require("./routes.index");
+var commentRoutes = require("./routes/comments");
+var screenshotRoutes = require("./routes/screenshots");
+var indexRoutes = require("./routes/index");
 
 mongoose.connect("mongodb://localhost/wowzone");
 seedDB();
@@ -46,8 +46,8 @@ app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 
 app.use(indexRoutes);
-app.use(screenshotRoutes);
-app.use(commentRoutes);
+app.use("/screenshots", screenshotRoutes);
+app.use("/screenshots/:id/comments", commentRoutes);
 
 app.listen(process.env.PORT, process.env.IP, function(){
     console.log("WoWZone server started.");

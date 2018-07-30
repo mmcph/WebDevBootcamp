@@ -23,7 +23,7 @@ router.post("/register", function(req, res){
             res.redirect("/screenshots");
         });
     });
-})
+});
 
 //login routes
 

@@ -1,9 +1,9 @@
 var express = require("express");
-var router = express.Router();
+var router = express.Router({mergeParams: true});
 var Comment = require("../models/comment");
 var Screenshot = require("../models/screenshot");
 
-router.get("/screenshots/:id/comments/new", isLoggedIn, function(req, res){
+router.get("/new", isLoggedIn, function(req, res){
     Screenshot.findById(req.params.id, function(err, screenshot){
         if(err){
             console.log(err);
@@ -13,7 +13,7 @@ router.get("/screenshots/:id/comments/new", isLoggedIn, function(req, res){
     });
 });
 
-router.post("/screenshots/:id", isLoggedIn, function(req, res){
+router.post("/", isLoggedIn, function(req, res){
     Screenshot.findById(req.params.id, function(err, screenshot){
         if(err){
             console.log(err);
