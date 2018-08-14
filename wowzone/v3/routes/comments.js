@@ -59,6 +59,18 @@ router.put("/:comment_id", function(req, res){
     });
 });
 
+//DELETE
+router.delete("/:comment_id", function(req, res){
+    Comment.findByIdAndRemove(req.params.comment_id, function(err){
+        if(err){
+            console.log(err);
+            res.redirect("back");
+        } else {
+            res.redirect("back");
+        }
+    });
+});
+
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){
         return next();
