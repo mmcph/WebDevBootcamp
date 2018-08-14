@@ -16,11 +16,15 @@ router.get("/new", function(req, res){
    res.render("screenshots/new"); 
 });
 
-router.post("/", function(req, res){
+router.post("/", isLoggedIn, function(req, res){
     var name = req.body.name;
     var image = req.body.image;
-    var descr = req.body.descr;
-    var newScreen = {name: name, image: image, descr: descr};
+    var description = req.body.description;
+    var author = {
+        id: req.user._id,
+        username: req.user.username
+    };
+    var newScreen = {name: name, image: image, description: description, author: author};
     Screenshot.create(newScreen, function(err, newSS){
         if(err){
             console.log(err);
@@ -30,15 +34,21 @@ router.post("/", function(req, res){
     });
 });
 
-router.get("/:id", function(req, res){
+router.get("/:id", isLoggedIn, function(req, res){
     Screenshot.findById(req.params.id).populate("comments").exec(function(err, specSS){
         if(err){
             console.log(err);
         } else {
-            console.log();
             res.render("screenshots/show", {screenshot:specSS});
         }
     });
 });
+
+function isLoggedIn(req, res, next){
+    if(req.isAuthenticated()){
+        return next();
+    }
+    res.redirect("/login");
+}
 
 module.exports = router;

@@ -15,7 +15,8 @@
                 <div class="caption-full">
                     <h4 class="pull-right">1g/hour</h4>
                     <h4><a><%=screenshot.name%></a></h4>
-                    <p><%=screenshot.description%></p>
+                    <em><p>Submitted by <%= screenshot.author.username %></p></em>
+                    <p><%= screenshot.description %></p>
                 </div>
             </div>
             <div class="well">
