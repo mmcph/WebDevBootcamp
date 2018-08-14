@@ -34,7 +34,7 @@ router.post("/", isLoggedIn, function(req, res){
     });
 });
 
-router.get("/:id", isLoggedIn, function(req, res){
+router.get("/:id", function(req, res){
     Screenshot.findById(req.params.id).populate("comments").exec(function(err, specSS){
         if(err){
             console.log(err);
@@ -66,7 +66,16 @@ router.put("/:id", function(req, res){
     });
 });
 
-
+//DELETE
+router.delete("/:id", function(req, res){
+    Screenshot.findByIdAndDelete(req.params.id, function(err){
+        if(err){
+            res.redirect("/screenshots");
+        } else {
+            res.redirect("/screenshots");
+        }
+    });
+});
 
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){

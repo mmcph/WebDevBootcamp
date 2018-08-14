@@ -17,6 +17,9 @@
                     <h4><a><%=screenshot.name%></a></h4>
                     <em><p>Submitted by <%= screenshot.author.username %></p></em>
                     <a class="btn btn-warning" href="/screenshots/<%=screenshot._id%>/edit">Edit</a>
+                    <form id="delete-form" action="/screenshots/<%=screenshot._id%>?_method=DELETE" method="POST">
+                        <button class="btn btn-danger">Delete</button>
+                    </form>
                     <p><%= screenshot.description %></p>
                 </div>
             </div>
