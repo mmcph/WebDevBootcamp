@@ -44,6 +44,30 @@ router.get("/:id", isLoggedIn, function(req, res){
     });
 });
 
+//EDIT
+router.get("/:id/edit", function(req, res){
+    Screenshot.findById(req.params.id, function(err, foundScreenshot){
+        if(err){
+            res.redirect("/screenshots")
+        } else {
+            res.render("screenshots/edit", {screenshot: foundScreenshot});
+        }
+    });
+});
+
+//UPDATE
+router.put("/:id", function(req, res){
+    Screenshot.findByIdAndUpdate(req.params.id, req.body.screenshot, function(err, updatedSS){
+        if(err){
+            res.redirect("/screenshots");
+        } else {
+            res.redirect("/screenshots/" + req.params.id);
+        }
+    });
+});
+
+
+
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){
         return next();

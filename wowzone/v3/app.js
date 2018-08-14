@@ -4,6 +4,7 @@ var bodyParser = require("body-parser");
 var passport = require("passport");
 var LocalStrategy = require("passport-local");
 var mongoose = require("mongoose");
+var methodOverride = require("method-override");
 var Screenshot = require("./models/screenshot");
 var Comment = require("./models/comment");
 var User = require("./models/user");
@@ -14,6 +15,7 @@ var screenshotRoutes = require("./routes/screenshots");
 var indexRoutes = require("./routes/index");
 
 mongoose.connect("mongodb://localhost/wowzone");
+app.use(methodOverride("_method"));
 // seedDB();
 
 // PASSPORT CONFIG
