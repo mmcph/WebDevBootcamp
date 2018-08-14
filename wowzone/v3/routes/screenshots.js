@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var Screenshot = require("../models/screenshot");
+var middleware = require("../middleware");
 
 router.get("/", function(req, res){
     Screenshot.find({}, function(err, allScreenshots){
@@ -16,7 +17,7 @@ router.get("/new", function(req, res){
    res.render("screenshots/new"); 
 });
 
-router.post("/", isLoggedIn, function(req, res){
+router.post("/", middleware.isLoggedIn, function(req, res){
     var name = req.body.name;
     var image = req.body.image;
     var description = req.body.description;
@@ -45,14 +46,14 @@ router.get("/:id", function(req, res){
 });
 
 //EDIT
-router.get("/:id/edit", checkScreenshotOwner, function(req, res){
+router.get("/:id/edit", middleware.checkScreenshotOwner, function(req, res){
     Screenshot.findById(req.params.id, function(err, foundScreenshot){
         res.render("screenshots/edit", {screenshot: foundScreenshot});
     });
 });
 
 //UPDATE
-router.put("/:id", checkScreenshotOwner, function(req, res){
+router.put("/:id", middleware.checkScreenshotOwner, function(req, res){
     Screenshot.findByIdAndUpdate(req.params.id, req.body.screenshot, function(err, updatedSS){
         if(err){
             res.redirect("/screenshots");
@@ -63,7 +64,7 @@ router.put("/:id", checkScreenshotOwner, function(req, res){
 });
 
 //DELETE
-router.delete("/:id", checkScreenshotOwner, function(req, res){
+router.delete("/:id", middleware.checkScreenshotOwner, function(req, res){
     Screenshot.findByIdAndDelete(req.params.id, function(err){
         if(err){
             res.redirect("/screenshots");
@@ -72,30 +73,5 @@ router.delete("/:id", checkScreenshotOwner, function(req, res){
         }
     });
 });
-
-function checkScreenshotOwner(req, res, next){
-    if(req.isAuthenticated()){
-        Screenshot.findById(req.params.id, function(err, foundScreenshot){
-            if(err){
-                res.redirect("back");
-            } else {
-                if(foundScreenshot.author.id.equals(req.user.id)){
-                    next();
-                } else {
-                    res.redirect("back");
-                }
-            }
-        });
-    } else {
-        res.redirect("back");
-    }
-}
-
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    }
-    res.redirect("/login");
-}
 
 module.exports = router;
