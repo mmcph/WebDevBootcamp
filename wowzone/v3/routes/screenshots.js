@@ -45,18 +45,14 @@ router.get("/:id", function(req, res){
 });
 
 //EDIT
-router.get("/:id/edit", function(req, res){
+router.get("/:id/edit", checkScreenshotOwner, function(req, res){
     Screenshot.findById(req.params.id, function(err, foundScreenshot){
-        if(err){
-            res.redirect("/screenshots")
-        } else {
-            res.render("screenshots/edit", {screenshot: foundScreenshot});
-        }
+        res.render("screenshots/edit", {screenshot: foundScreenshot});
     });
 });
 
 //UPDATE
-router.put("/:id", function(req, res){
+router.put("/:id", checkScreenshotOwner, function(req, res){
     Screenshot.findByIdAndUpdate(req.params.id, req.body.screenshot, function(err, updatedSS){
         if(err){
             res.redirect("/screenshots");
@@ -67,7 +63,7 @@ router.put("/:id", function(req, res){
 });
 
 //DELETE
-router.delete("/:id", function(req, res){
+router.delete("/:id", checkScreenshotOwner, function(req, res){
     Screenshot.findByIdAndDelete(req.params.id, function(err){
         if(err){
             res.redirect("/screenshots");
@@ -76,6 +72,24 @@ router.delete("/:id", function(req, res){
         }
     });
 });
+
+function checkScreenshotOwner(req, res, next){
+    if(req.isAuthenticated()){
+        Screenshot.findById(req.params.id, function(err, foundScreenshot){
+            if(err){
+                res.redirect("back");
+            } else {
+                if(foundScreenshot.author.id.equals(req.user.id)){
+                    next();
+                } else {
+                    res.redirect("back");
+                }
+            }
+        });
+    } else {
+        res.redirect("back");
+    }
+}
 
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){
