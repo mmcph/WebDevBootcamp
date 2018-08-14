@@ -3,10 +3,7 @@
     <div class="row">
         <h1 style="text-align:center;">Add a comment to <%= screenshot.name %></h1>
         <div style="width:30%; margin:30px auto;">
-            <form action="/screenshots/<%= screenshot._id %>" method="POST">
-                <div class="form-group">
-                    <input class="form-control" type="text" name="comment[author]" placeholder="Author">
-                </div>
+            <form action="/screenshots/<%= screenshot._id %>/comments" method="POST">
                 <div class="form-group">
                     <input class="form-control" type="text" name="comment[text]" placeholder="Comment text">
                 </div>

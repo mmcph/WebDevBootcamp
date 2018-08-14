@@ -35,7 +35,7 @@ router.get("/:id", function(req, res){
         if(err){
             console.log(err);
         } else {
-            console.log(specSS);
+            console.log();
             res.render("screenshots/show", {screenshot:specSS});
         }
     });

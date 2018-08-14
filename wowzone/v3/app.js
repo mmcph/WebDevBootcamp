@@ -14,7 +14,7 @@ var screenshotRoutes = require("./routes/screenshots");
 var indexRoutes = require("./routes/index");
 
 mongoose.connect("mongodb://localhost/wowzone");
-seedDB();
+// seedDB();
 
 // PASSPORT CONFIG
 app.use(require("express-session")({

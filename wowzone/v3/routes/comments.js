@@ -23,6 +23,11 @@ router.post("/", isLoggedIn, function(req, res){
                 if(err){
                     console.log(err);
                 } else {
+                    //add username & id
+                    comment.author.id = req.user._id
+                    comment.author.username = req.user.username;
+                    //save comment
+                    comment.save();
                     screenshot.comments.push(comment);
                     screenshot.save();
                     res.redirect("/screenshots/" + screenshot._id);
