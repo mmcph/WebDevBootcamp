@@ -2,6 +2,7 @@ var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
 var passport = require("passport");
+var flash = require("connect-flash");
 var LocalStrategy = require("passport-local");
 var mongoose = require("mongoose");
 var methodOverride = require("method-override");
@@ -16,6 +17,7 @@ var indexRoutes = require("./routes/index");
 
 mongoose.connect("mongodb://localhost/wowzone");
 app.use(methodOverride("_method"));
+app.use(flash());
 // seedDB();
 
 // PASSPORT CONFIG
@@ -33,6 +35,8 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use(function(req, res, next){
    res.locals.currentUser = req.user;
+   res.locals.success = req.flash("success");
+   res.locals.error = req.flash("error");
    next();
 });
 

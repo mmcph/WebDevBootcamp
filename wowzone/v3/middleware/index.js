@@ -12,11 +12,13 @@ middlewareObj.checkScreenshotOwner = function(req, res, next){
                 if(foundScreenshot.author.id.equals(req.user.id)){
                     next();
                 } else {
+                    req.flash("error", "You don't have permission to alter this screenshot.");
                     res.redirect("back");
                 }
             }
         });
     } else {
+        req.flash("error", "You must be logged in to do that.")
         res.redirect("back");
     }
 }
@@ -30,11 +32,13 @@ middlewareObj.checkCommentOwnership = function(req, res, next){
                 if(foundComment.author.id.equals(req.user.id)){
                     next();
                 } else {
+                    req.flash("error", "You don't have permission to alter this comment.");
                     res.redirect("back");
                 }
             }
         });
     } else {
+        req.flash("error", "You must be logged in to do that.");
         res.redirect("back");
     }
 }
@@ -43,6 +47,7 @@ middlewareObj.isLoggedIn = function(req, res, next){
     if(req.isAuthenticated()){
         return next();
     }
+    req.flash("error", "You must be logged in to do that.");
     res.redirect("/login");
 }
 
