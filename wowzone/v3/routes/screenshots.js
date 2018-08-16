@@ -19,13 +19,14 @@ router.get("/new", function(req, res){
 
 router.post("/", middleware.isLoggedIn, function(req, res){
     var name = req.body.name;
+    var goldPerHour = req.body.goldPerHour;
     var image = req.body.image;
     var description = req.body.description;
     var author = {
         id: req.user._id,
         username: req.user.username
     };
-    var newScreen = {name: name, image: image, description: description, author: author};
+    var newScreen = {name: name, goldPerHour: goldPerHour, image: image, description: description, author: author};
     Screenshot.create(newScreen, function(err, newSS){
         if(err){
             console.log(err);

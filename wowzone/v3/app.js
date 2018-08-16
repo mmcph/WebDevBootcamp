@@ -15,7 +15,7 @@ var commentRoutes = require("./routes/comments");
 var screenshotRoutes = require("./routes/screenshots");
 var indexRoutes = require("./routes/index");
 
-mongoose.connect("mongodb://localhost/wowzone");
+mongoose.connect("mongodb://localhost/wowzone_final");
 app.use(methodOverride("_method"));
 app.use(flash());
 // seedDB();

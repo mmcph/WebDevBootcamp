@@ -2,6 +2,7 @@ var mongoose = require("mongoose");
  
 var screenshotSchema = new mongoose.Schema({
    name: String,
+   goldPerHour: String,
    image: String,
    description: String,
    author: {
